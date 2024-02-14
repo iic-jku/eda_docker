@@ -61,13 +61,6 @@ PARAMS=""
 if [[ "$OSTYPE" == "linux"* ]]; then
 	echo "[INFO] Auto detected Linux."
 	# Should also be a sensible default
-	if [ -z ${CONTAINER_USER+z} ]; then
-	        CONTAINER_USER=$(id -u)
-	fi
-
-	if [ -z ${CONTAINER_GROUP+z} ]; then
-	        CONTAINER_GROUP=$(id -g)
-	fi
 	for group_id in $(id -G)
 	do
 		PARAMS="$PARAMS --group-add $group_id"
@@ -167,5 +160,5 @@ else
 	# ${ECHO_IF_DRY_RUN} docker pull "${DOCKER_USER}/${DOCKER_IMAGE}:${DOCKER_TAG}"
 	# Disable SC2086, $PARAMS must be globbed and splitted.
 	# shellcheck disable=SC2086
-	${ECHO_IF_DRY_RUN} docker run -d --rm --user "${CONTAINER_USER}:${CONTAINER_GROUP}" -e HOME -e DISPLAY -v "/eda:/eda:rw" -v "/home:/home:rw" -v "/sim:/sim:rw" -v "/sim_nfs:/sim_nfs:rw" --network host --hostname `hostname` --add-host maxwell:140.78.161.40 --add-host maxwell.riic.at:140.78.161.40  ${PARAMS} --name "${CONTAINER_NAME}" "${DOCKER_USER}/${DOCKER_IMAGE}:${DOCKER_TAG}"
+	${ECHO_IF_DRY_RUN} docker run -d --rm --user "$(id -u):$(id -g)" -e USER -e "GROUP=$(id -g -n)" -e HOME -e DISPLAY -v "/eda:/eda:rw" -v "/home:/home:rw" -v "/sim:/sim:rw" -v "/sim_nfs:/sim_nfs:rw" --network host --hostname `hostname` --add-host maxwell:140.78.161.40 --add-host maxwell.riic.at:140.78.161.40  ${PARAMS} --name "${CONTAINER_NAME}" "${DOCKER_USER}/${DOCKER_IMAGE}:${DOCKER_TAG}"
 fi

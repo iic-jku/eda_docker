@@ -3,7 +3,7 @@
 
 USER_ID=$(id -u)
 GROUP_ID=$(id -g)
-echo "[INFO] USER_ID: $USER_ID, GROUP_ID: $GROUP_ID"
+echo "[INFO] USER_ID: $USER_ID, $USER; GROUP_ID: $GROUP_ID, $GROUP"
 
 if [ x"$USER_ID" != x"0" ]; then
 
@@ -13,8 +13,8 @@ if [ x"$USER_ID" != x"0" ]; then
     cat /etc/passwd > $NSS_WRAPPER_PASSWD
     cat /etc/group  > $NSS_WRAPPER_GROUP
 
-    echo "designer:x:${USER_ID}:${GROUP_ID}:Default Application User:${HOME}:/bin/tcsh" >> $NSS_WRAPPER_PASSWD
-    echo "designers:x:${GROUP_ID}:${USER_ID}" >> $NSS_WRAPPER_GROUP
+echo "${USER}:x:${USER_ID}:${GROUP_ID}:Default Application User:${HOME}:/bin/tcsh" >> $NSS_WRAPPER_PASSWD
+    echo "${GROUP}:x:${GROUP_ID}:${USER_ID}" >> $NSS_WRAPPER_GROUP
 
     export NSS_WRAPPER_PASSWD
     export NSS_WRAPPER_GROUP
